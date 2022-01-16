@@ -4,9 +4,9 @@
     Version:            0.0.1
     Description:        使用 Flask 进行模型部署
     History:            
-        1.  Date:           q
+        1.  Date:           2022-1-16
             Author:         LIN Guocheng
-            Modification:   1
+            Modification:   修改了预测结果的判断规则
 """
 
 import flask
