@@ -1,12 +1,15 @@
 """
     File Name:          flask_LSTM.py
     Author:             LIN Guocheng
-    Version:            0.0.1
+    Version:            1.0.1
     Description:        使用 Flask 进行模型部署
     History:            
         1.  Date:           2022-1-16
             Author:         LIN Guocheng
             Modification:   修改了预测结果的判断规则
+        2.  Date:           2022-1-17
+            Author:         LIN Guocheng
+            Modification:   增加了初始的提示页面
 """
 
 import flask
@@ -23,6 +26,12 @@ app = flask.Flask(__name__)
 # 加载模型
 model = load_model("model/LSTM.h5")
 
+# 初始界面
+@app.route("/")
+def index():
+    return "<h1> 服务器正在正常运行 <h1>"
+
+# 预测界面
 @app.route("/predict", methods=["GET", "POST"])
 
 def predict():
