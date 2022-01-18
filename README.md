@@ -44,5 +44,5 @@
 
 ## 贡献者
 - [LIN Guocheng](https://github.com/lgc0208)
-- [Huang ShiYang](https://github.com/moontree613)
-- Dong Tianyu
+- [HUANG ShiYang](https://github.com/moontree613)
+- DONG Tianyu
