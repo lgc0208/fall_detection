@@ -13,9 +13,7 @@
 """
 
 import flask
-import pandas as pd
 import numpy as np
-import json
 from tensorflow.keras.models import load_model
 
 host = '0.0.0.0'
