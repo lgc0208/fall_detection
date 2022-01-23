@@ -1,7 +1,7 @@
 """
     File Name:          flask_LSTM.py
     Author:             LIN Guocheng
-    Version:            1.0.1
+    Version:            1.0.2
     Description:        使用 Flask 进行模型部署
     History:            
         1.  Date:           2022-1-16
@@ -10,6 +10,9 @@
         2.  Date:           2022-1-17
             Author:         LIN Guocheng
             Modification:   增加了初始的提示页面
+        3.  Date:           2022-1-21
+            Author:         LIN Guocheng
+            Modification:   修改了host地址和预测返回值
 """
 
 import flask
@@ -34,7 +37,7 @@ def index():
 
 def predict():
     data = {"success" : False}
-    data = {"result" : ""}
+    data = {"result" : 0}
     
     params = flask.json
     if(params == None):
@@ -52,9 +55,9 @@ def predict():
         y_predict = model.predict(test_data)  
         print("预测结果为：")
         if(y_predict > 0.5):
-            data["result"] = "出现摔倒"
+            data["result"] = 1 # "出现摔倒"
         else:
-           data["result"] = "无事发生"
+           data["result"] = 0 # "无事发生"
         #data["prediction"] = str(y_predict)
         print(data["result"])
         data["success"] = True
