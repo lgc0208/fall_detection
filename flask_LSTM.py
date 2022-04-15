@@ -24,6 +24,9 @@
         6.  Date:           2022-4-15
             Author:         LIN Guocheng
             Modification:   针对服务器使用的 8000 端口进行适配，同时只有当传输的数据数据符合预测条件时才更新 CSV
+        7.  Date:           2022-4-15
+            Author:         LIN Guocheng
+            Modification:   增加对用户状态的记录文件和访问接口，可以直接获取用户当前是否摔倒的状态
 """
 
 import flask
@@ -92,8 +95,22 @@ def predict():
             data_to_save = pd.DataFrame(ready_to_save)
             data_to_save.to_csv('data.csv', header=0, index=0)
 
+            # 记录判断的当前状态值
+            with open("state.txt", "w") as f:
+                f.write(str(data["result"]))
+                f.close()
         # 返回 json
         return flask.jsonify(data["result"])
+
+
+# 获取用户当前状态
+@app.route("/state", methods=['GET', 'POST'])
+def state():
+    with open("state.txt", "r") as f:
+        user_state = f.read()
+        f.close()
+
+        return user_state
 
 
 # 启动 flask

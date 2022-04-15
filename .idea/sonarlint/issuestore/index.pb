@@ -13,3 +13,11 @@ V
 ..idea/inspectionProfiles/profiles_settings.xml,1\e\1e9075f5bf079c01ef2c910709e91a497d262080
 M
 .idea/dictionaries/Lenovo.xml,6\f\6f9f3ad266c4374cb97027fd7686eeb14ecd0b80
+<
+localHost.py,1\2\12bd041be862d0f26454153594fc2946dc8efa88
+=
+data_test.csv,f\6\f6e865cb33e9127ee56b64583cca69da7f30cd5e
+>
+logs/flask.log,f\f\ff4c5f4a36e814c4e95444797a946cd08619298c
+P
+ .spyproject/config/workspace.ini,5\a\5a9396b66b59b04e84a688b5ed2deb0cd7958788
