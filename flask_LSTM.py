@@ -1,9 +1,10 @@
+# -*- coding: UTF-8 -*-
 """
     File Name:          flask_LSTM.py
     Author:             LIN Guocheng
     Version:            1.0.4
     Description:        使用 Flask 进行模型部署
-    History:            
+    History:
         1.  Date:           2022-1-16
             Author:         LIN Guocheng
             Modification:   修改了预测结果的判断规则
@@ -16,10 +17,13 @@
         4.  Date:           2022-1-26
             Author:         LIN Guocheng
             Modification:   针对可能产生的错误 unexpected EOF while parsing 进行修正
-        4.  Date:           2022-4-15
+        5.  Date:           2022-4-15
             Author:         LIN Guocheng
             Modification:   针对硬件端发送报文有限的情况，将每次需要传递 32 组值改为传递任意组值，并使用 CSV 文件存储32组值。每收到新的值传
                             递时更新 CSV 文件，并调用模型进行预测
+        6.  Date:           2022-4-15
+            Author:         LIN Guocheng
+            Modification:   针对服务器使用的 8000 端口进行适配，同时只有当传输的数据数据符合预测条件时才更新 CSV
 """
 
 import flask
@@ -70,8 +74,8 @@ def predict():
                 predict_values = np.append(predict_values, test_data, axis=0)[-32:, :]
 
             # 保存至 csv
-            data_to_save = pd.DataFrame(predict_values)
-            data_to_save.to_csv('data.csv', header=0, index=0)
+            ready_to_save = predict_values
+
             predict_values = predict_values[None, :, :]
 
             app.logger.info("收到预测请求\n")
@@ -84,6 +88,9 @@ def predict():
             app.logger.info(data["result"])
             app.logger.info("\n")
             data["success"] = True
+            # 预测成功了才更新 csv
+            data_to_save = pd.DataFrame(ready_to_save)
+            data_to_save.to_csv('data.csv', header=0, index=0)
 
         # 返回 json
         return flask.jsonify(data["result"])
@@ -98,5 +105,5 @@ if __name__ == '__main__':
     logging_format = logging.Formatter("%(asctime)s flask %(levelname)s %(message)s")
     handler.setFormatter(logging_format)
     app.logger.addHandler(handler)
-    server = pywsgi.WSGIServer(('0.0.0.0', 5000), app, log=app.logger)
+    server = pywsgi.WSGIServer(('0.0.0.0', 8000), app, log=app.logger)
     server.serve_forever()
