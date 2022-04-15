@@ -1,7 +1,7 @@
 """
     File Name:          flask_LSTM.py
     Author:             LIN Guocheng
-    Version:            1.0.3
+    Version:            1.0.4
     Description:        使用 Flask 进行模型部署
     History:            
         1.  Date:           2022-1-16
@@ -16,11 +16,17 @@
         4.  Date:           2022-1-26
             Author:         LIN Guocheng
             Modification:   针对可能产生的错误 unexpected EOF while parsing 进行修正
+        4.  Date:           2022-4-15
+            Author:         LIN Guocheng
+            Modification:   针对硬件端发送报文有限的情况，将每次需要传递 32 组值改为传递任意组值，并使用 CSV 文件存储32组值。每收到新的值传
+                            递时更新 CSV 文件，并调用模型进行预测
 """
 
 import flask
 import numpy as np
 import logging
+
+import pandas as pd
 from gevent import pywsgi
 from tensorflow.keras.models import load_model
 
@@ -33,15 +39,6 @@ app = flask.Flask(__name__)
 model = load_model("model/LSTM.h5")
 
 
-@app.before_request
-def enable_form_raw_cache():
-    if flask.request.path.startswith('/predict'):
-        if flask.request.content_length > 1024 * 1024:  # 1mb
-            flask.abort(413)  # Payload too large
-        app.logger.info(flask.request.headers)
-        app.logger.info(flask.request.data)
-
-
 # 初始界面
 @app.route("/")
 def index():
@@ -52,7 +49,6 @@ def index():
 @app.route("/predict", methods=["GET", "POST"])
 def predict():
     data = {"success": False, "result": 0}
-
     params = flask.json
 
     if params is None:
@@ -64,11 +60,22 @@ def predict():
         test_data = flask.request.args.getlist("testData")
         if test_data is not None:
             test_data = eval(str(test_data).replace("\'", ""))
-            test_data = np.array(test_data)
-            # 升维
-            test_data = test_data[None, :, :]
+            test_data = np.array(test_data, dtype="float")
+
+            predict_values = pd.read_csv("data.csv", header=None).dropna(axis=0, how="any").values
+
+            if predict_values is None:
+                predict_values = test_data[:, :]
+            else:
+                predict_values = np.append(predict_values, test_data, axis=0)[-32:, :]
+
+            # 保存至 csv
+            data_to_save = pd.DataFrame(predict_values)
+            data_to_save.to_csv('data.csv', header=0, index=0)
+            predict_values = predict_values[None, :, :]
+
             app.logger.info("收到预测请求\n")
-            y_predict = model.predict(test_data)
+            y_predict = model.predict(predict_values)
             app.logger.info("预测结果为：")
             if y_predict > 0.5:
                 data["result"] = 1  # "出现摔倒"
@@ -79,7 +86,7 @@ def predict():
             data["success"] = True
 
         # 返回 json
-        return flask.jsonify(data)
+        return flask.jsonify(data["result"])
 
 
 # 启动 flask
