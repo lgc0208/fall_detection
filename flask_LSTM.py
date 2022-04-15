@@ -27,6 +27,9 @@
         7.  Date:           2022-4-15
             Author:         LIN Guocheng
             Modification:   增加对用户状态的记录文件和访问接口，可以直接获取用户当前是否摔倒的状态
+        8.  Date:           2022-4-15
+            Author:         LIN Guocheng
+            Modification:   修改了对用户当前状态的判断规则，只有当连续20次预测结果中判断摔倒次数大于正常次数时，更新用户状态为摔倒
 """
 
 import flask
@@ -93,12 +96,17 @@ def predict():
             data["success"] = True
             # 预测成功了才更新 csv
             data_to_save = pd.DataFrame(ready_to_save)
-            data_to_save.to_csv('data.csv', header=0, index=0)
+            data_to_save.to_csv('data.csv', header=False, index=False)
 
             # 记录判断的当前状态值
-            with open("state.txt", "w") as f:
-                f.write(str(data["result"]))
-                f.close()
+            new_state = np.array([[data["result"]]])
+            old_state = pd.read_csv('state.csv', header=None).dropna(axis=0, how="any").values
+            if old_state is None:
+                state_to_save = new_state
+            else:
+                state_to_save = np.append(old_state, new_state, axis=0)[-20:]
+            state_to_save = pd.DataFrame(state_to_save)
+            state_to_save.to_csv("state.csv", header=False, index=False)
         # 返回 json
         return flask.jsonify(data["result"])
 
@@ -106,11 +114,14 @@ def predict():
 # 获取用户当前状态
 @app.route("/state", methods=['GET', 'POST'])
 def state():
-    with open("state.txt", "r") as f:
-        user_state = f.read()
-        f.close()
-
-        return user_state
+    all_state = pd.read_csv("state.csv", header=None).dropna(axis=0, how="any").values
+    fall_down_state = int(np.sum(all_state == 1))
+    normal_state = int(np.sum(all_state == 0))
+    if fall_down_state > normal_state:
+        user_state = 1
+    else:
+        user_state = 0
+    return str(user_state)
 
 
 # 启动 flask
