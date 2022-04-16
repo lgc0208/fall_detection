@@ -2,8 +2,8 @@
 """
     File Name:          flask_LSTM.py
     Author:             LIN Guocheng
-    Version:            1.0.4
-    Description:        使用 Flask 进行模型部署
+    Version:            1.0.9
+    Description:        使用 Flask 进行摔倒检测的模型部署
     History:
         1.  Date:           2022-1-16
             Author:         LIN Guocheng
@@ -30,6 +30,9 @@
         8.  Date:           2022-4-15
             Author:         LIN Guocheng
             Modification:   修改了对用户当前状态的判断规则，只有当连续20次预测结果中判断摔倒次数大于正常次数时，更新用户状态为摔倒
+        9.  Date:           2022-4-16
+            Author:         LIN Guocheng
+            Modification:   优化了摔倒状态的判断方式
 """
 
 import flask
@@ -117,7 +120,7 @@ def state():
     all_state = pd.read_csv("state.csv", header=None).dropna(axis=0, how="any").values
     fall_down_state = int(np.sum(all_state == 1))
     normal_state = int(np.sum(all_state == 0))
-    if fall_down_state > normal_state:
+    if fall_down_state - normal_state >= 10:
         user_state = 1
     else:
         user_state = 0
