@@ -104,10 +104,7 @@ def predict():
             # 记录判断的当前状态值
             new_state = np.array([[data["result"]]])
             old_state = pd.read_csv('state.csv', header=None).dropna(axis=0, how="any").values
-            if old_state is None:
-                state_to_save = new_state
-            else:
-                state_to_save = np.append(old_state, new_state, axis=0)[-20:]
+            state_to_save = np.append(old_state, new_state, axis=0)[-20:]
             state_to_save = pd.DataFrame(state_to_save)
             state_to_save.to_csv("state.csv", header=False, index=False)
         # 返回 json

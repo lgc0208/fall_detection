@@ -17,3 +17,5 @@ P
  .spyproject/config/workspace.ini,5\a\5a9396b66b59b04e84a688b5ed2deb0cd7958788
 8
 data.csv,1\a\1aa5784d52481911bc44df0e8b6a8fd581b0518c
+>
+logs/flask.log,f\f\ff4c5f4a36e814c4e95444797a946cd08619298c
