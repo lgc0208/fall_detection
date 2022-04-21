@@ -117,7 +117,7 @@ def state():
     all_state = pd.read_csv("state.csv", header=None).dropna(axis=0, how="any").values
     fall_down_state = int(np.sum(all_state == 1))
     normal_state = int(np.sum(all_state == 0))
-    if fall_down_state - normal_state >= 10:
+    if fall_down_state > normal_state:
         user_state = 1
     else:
         user_state = 0
