@@ -2,7 +2,7 @@
 """
     File Name:          flask_LSTM.py
     Author:             LIN Guocheng
-    Version:            1.0.9
+    Version:            1.1.0
     Description:        使用 Flask 进行摔倒检测的模型部署
     History:
         1.  Date:           2022-1-16
@@ -33,6 +33,9 @@
         9.  Date:           2022-4-16
             Author:         LIN Guocheng
             Modification:   优化了摔倒状态的判断方式
+        10. Date:           2022-5-6
+            Author:         LIN Guocheng
+            Modification:   增加了经纬度位置的获取和设置接口
 """
 
 import flask
@@ -50,6 +53,9 @@ app = flask.Flask(__name__)
 
 # 加载模型
 model = load_model("model/LSTM.h5")
+
+# GPS 定位数据，初始位置定义为北京市
+gps_data = {"lon": 116.397128, "lat": 39.916527}
 
 
 # 初始界面
@@ -109,6 +115,29 @@ def predict():
             state_to_save.to_csv("state.csv", header=False, index=False)
         # 返回 json
         return flask.jsonify(data["result"])
+
+
+# 获取经纬度界面
+@app.route("/gps", methods=["GET", "POST"])
+def gps():
+    params = flask.json
+
+    if params is None:
+        params = flask.request.form.get("")
+
+    # 接收到输入参数，返回预测值
+    if params is not None:
+        app.logger.info("\n")
+        lon = flask.request.args.get("lon")  # 获取经度
+        lat = flask.request.args.get("lat")  # 获取纬度
+        if lon is None and lat is None:
+            print("GPS data is : ", gps_data)
+            return flask.jsonify(gps_data)
+        else:
+            gps_data["lon"] = float(lon)
+            gps_data["lat"] = float(lat)
+            print("GPS data is : ", gps_data)
+            return "GPS data has updated successfully"
 
 
 # 获取用户当前状态
