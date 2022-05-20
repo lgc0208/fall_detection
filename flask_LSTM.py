@@ -2,7 +2,7 @@
 """
     File Name:          flask_LSTM.py
     Author:             LIN Guocheng
-    Version:            1.1.0
+    Version:            1.1.2
     Description:        使用 Flask 进行摔倒检测的模型部署
     History:
         1.  Date:           2022-1-16

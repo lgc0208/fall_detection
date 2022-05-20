@@ -21,5 +21,3 @@ I
 README.html,7\3\73ff05a9f629bff633fa7a0499495556f0f1a07f
 H
 templates/API说明.html,5\3\537abcf0efa6e897b0a853665ec6eb53b442fcf6
->
-logs/flask.log,f\f\ff4c5f4a36e814c4e95444797a946cd08619298c
