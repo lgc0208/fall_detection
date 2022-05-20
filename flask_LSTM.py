@@ -36,6 +36,12 @@
         10. Date:           2022-5-6
             Author:         LIN Guocheng
             Modification:   增加了经纬度位置的获取和设置接口
+        11. Date:           2022-5-12
+            Author:         LIN Guocheng
+            Modification:   增加了 SSL 证书，支持 HTTPS
+        12. Date:           2022-5-20
+            Author:         LIN Guocheng
+            Modification:   在主页增加项目说明
 """
 
 import flask
@@ -61,7 +67,7 @@ gps_data = {"lon": 116.397128, "lat": 39.916527}
 # 初始界面
 @app.route("/")
 def index():
-    return "<h1> 服务器正在正常运行 <h1>"
+    return flask.render_template("index.html")
 
 
 # 预测界面
