@@ -41,7 +41,7 @@
             Modification:   增加了 SSL 证书，支持 HTTPS
         12. Date:           2022-5-20
             Author:         LIN Guocheng
-            Modification:   在主页增加项目说明
+            Modification:   在主页增加项目说明和 LOGO
 """
 
 import flask
