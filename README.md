@@ -19,18 +19,28 @@
 
 - TensorFlow 2.7.0
 - flask 1.1.2
+- gevent 21.8.0
 - numpy 1.19.5
 - h5py 3.6.0
 
 ## 目录结构描述
 
 ```
-├── README.md              // help
+├── README.md              // 说明文档
 ├── h5_to_pb.py            // 将 h5 模型转换为 pb 模型
 ├── flask_LSTM.py	   // 基于 flask 框架的 LSTM 模型部署代码
+├── interface_test.py	   // 测试接口
+├── data.csv     	   // 用户姿态信息
+├── state.csv	           // 用户历史状态信息
 ├── model                  // 模型
 │   ├── LSTM.h5  	   // h5 模型
-│   └── LSTM.pb            // pb模型
+│   └── LSTM.pb            // pb 模型
+├── image                  // 图文件夹
+│   └── logo.png           // 团队 LOGO
+├── logs                   // 日志文件夹
+│   └── flask.log          // flask 运行日志
+├── templates              // HTML 文件夹
+│   └── index.html         // 服务器首页信息
 ├── 2021.10实验处理         // 2021年10月的实验数据处理和模型训练稿
 └── 2021.12实验处理         // 2021年12月的实验数据处理和模型训练稿
 ```
