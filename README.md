@@ -34,6 +34,7 @@
 
 ```
 ├── README.md              // 说明文档
+├── LICENSE                // 开源协议
 ├── h5_to_pb.py            // 将 h5 模型转换为 pb 模型
 ├── flask_LSTM.py	   // 基于 flask 框架的 LSTM 模型部署代码
 ├── interface_test.py	   // 测试接口
