@@ -1,5 +1,5 @@
 <h2 align="center"> 基于 ATK-MPU6050 和 LSTM 的摔倒检测算法 </h2>
-<p align="center"><b>2021-2022大学生创新创业训练项目/人工智能学院/北京邮电大学</b></p>
+<p align="center"><b>国家级/2021-2022大学生创新创业训练项目/人工智能学院/北京邮电大学</b></p>
 
 <p align="center">
     <img src="https://badgen.net/github/license/lgc0208/fall_detection/">
