@@ -109,18 +109,13 @@ void loop(){
  // {
     if (wifi.createTCP(HOST_NAME, HOST_PORT)) { //建立TCP连接，如果失败，不能发送该数据
       Serial.print("成功建立TCP连接\r\n");
-      //char buf[10];
-      //拼接发送data字段字符串
-      //String jsonToSend = "{\"需要发送的变量名\":";
-      //jsonToSend += "\"" + String("需要发送的变量") + "\"";
-      //jsonToSend += "}";
+
       //MPU6050开始
       
       //MPU6050结束
 
-      //String jsonToSend = "{\"MPU6050-6维模拟参数\":";
-      //jsonToSend += "\"" + String(ax) +"," + String(ay) +","+  String(az) +","+ String(gx) +","+ String(gy) +","+ String(gz) +"\"";
-    
+      
+      
       //拼接POST请求字符串
 
 
@@ -132,15 +127,40 @@ void loop(){
         delay(100);
       }
        //Serial.println(data);
+      /*accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+      String data = "["+String(ax) +"," + String(ay)  +","+  String(az) +","+ String(gx) +","+ String(gy)  +","+ String(gz)+"]";*/
+      
       String postString = "GET /predict?testData="+data+" HTTP/1.1\r\nHost: 101.43.164.112\r\nConnection:Keep-Alive\r\n\r\n";//\r\nUser-Agent: curl/7.71.1\r\nAccept: */*\r\nAccept-Encoding: deflate, gzip\r\n\r\n  close
 
 
+
+
       const char *postArray = postString.c_str(); //将str转化为char数组
-   
+      //char * buffer;//用于存储数据
+      
+      
+      //char buffer[150];2022.4.15
       Serial.println(postArray);
       wifi.send((const uint8_t *)postArray, strlen(postArray)); //send发送命令，参数必须是这两种格式，尤其是(const uint8_t*)
       Serial.println("send success");
-
+      //delay(100);
+      /*uint32_t len = wifi.recv(buffer, sizeof(buffer), 10000);
+      Serial.println(len);
+      if (len > 0) {
+      Serial.print("Received:[");
+      for(uint32_t i = 0; i < len; i++) {
+          Serial.print((char)buffer[i]);
+      }
+      Serial.print("]\r\n");
+      }
+      delay(100);*/
+      
+      /*if (wifi.releaseTCP()) { //释放TCP连接
+        Serial.print("release tcp ok\r\n");
+      } else {
+        Serial.print("release tcp err\r\n");
+      }*/
+      //
       postArray = NULL; //清空数组，等待下次传输数据
     } else {
       Serial.print("create tcp err\r\n");
